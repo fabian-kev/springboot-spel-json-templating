@@ -50,11 +50,6 @@ public class SpringbootSpelApplication {
     public CommandLineRunner commandLineRunner(){
         return args -> {
             ExpressionParser parser = new SpelExpressionParser();
-            String randomPhrase =
-                    parser.parseExpression("random number is #{T(java.lang.Math).random()}",
-                            new TemplateParserContext()).getValue(String.class);
-
-            System.out.println(randomPhrase);
 
             TemplateParserContext templateParserContext = new TemplateParserContext();
             Account account = new Account();
@@ -63,7 +58,6 @@ public class SpringbootSpelApplication {
             Customer customer = new Customer();
             customer.id = UUID.randomUUID();
 
-//            String json = "hahaha my name is #{template_parameter.name} and my account name is #{accountService.getName()}";
             String json = "  {'name': '#{template_parameter.name}', 'balance': #{accountService.getBalance(customer.getId().toString()) } }";
 
             Map<String, Object> templateParameter = new HashMap<>();
@@ -74,17 +68,11 @@ public class SpringbootSpelApplication {
             templateExprParameter.put("customer", customer);
 
 
-
-//            ExpressionParser parser = new SpelExpressionParser();
             Expression exp = parser.parseExpression(json, templateParserContext);
             StandardEvaluationContext context = new StandardEvaluationContext(templateExprParameter);
-
-
             context.addPropertyAccessor(new MapAccessor());
-            System.out.println( exp.getValue(context, String.class) );
 
-//            System.out.println(message);
-
+            System.out.println(exp.getValue(context));
 
         };
     }
